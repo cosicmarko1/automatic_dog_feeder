@@ -2,8 +2,8 @@
 
 HX711 scale(23, 19); 
 
-// calibration factor for 1kg scale is -1170
-float calibration_factor = -1170;
+// calibration factor for 1kg scale is -915
+float calibration_factor = -915;
 float units;
 float ounces;
 
