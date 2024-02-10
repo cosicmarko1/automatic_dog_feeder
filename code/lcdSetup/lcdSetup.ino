@@ -8,7 +8,7 @@ const int buttonUpPin = 2;
 const int buttonDownPin = 3;
 const int buttonOKPin = 4;
 
-int setParametersState = 0;      // 0: Hours, 1: Minutes, 2: Seconds, 3: Dog Size, 4: Done
+int setParametersState = 0; // 0: Hours, 1: Minutes, 2: Seconds, 3: Dog Size, 4: Done
 int enteredHours = 0;
 int enteredMinutes = 0;
 int enteredSeconds = 0;
@@ -18,6 +18,12 @@ void setup() {
   Serial.begin(115200);
 
   lcd.begin();  
+
+  lcd.print("Automatic Dog");
+  lcd.setCursor(0, 1);
+  lcd.print("   Feeder");
+  delay(2000);
+  lcd.clear();
 
   lcd.print("Enter time");
 
@@ -31,7 +37,7 @@ void loop() {
 
   printOnLCD();
 
-  delay(1000);
+  delay(500);
 
   if (setParametersState == 4) {
     updateTime();
@@ -41,80 +47,48 @@ void loop() {
 void handleButtons() {
   if (digitalRead(buttonUpPin) == LOW) {
     switch (setParametersState) {
-      case 0: 
-        enteredHours++;
-        break;
-      case 1: 
-        enteredMinutes++;
-        break;
-      case 2: 
-        enteredSeconds++;
-        break;
-      case 3: 
-        selectedDogSize++;
-        break;
+      case 0:  
+      if (enteredHours < 23) enteredHours++;
+      else enteredHours = 0;
+      break;
+    case 1:  
+      if (enteredMinutes < 59) enteredMinutes++;
+      else enteredMinutes = 0;
+      break;
+    case 2:  
+      if (enteredSeconds < 59) enteredSeconds++;
+      else enteredSeconds = 0;
+      break;
+    case 3:
+      if (selectedDogSize < 2) selectedDogSize++;
+      else selectedDogSize = 0;
+      break;
     }
   }
 
   if (digitalRead(buttonDownPin) == LOW) {
     switch (setParametersState) {
-      case 0: 
-        enteredHours--;
-        break;
-      case 1: 
-        enteredMinutes--;
-        break;
-      case 2: 
-        enteredSeconds--;
-        break;
-      case 3: 
-        selectedDogSize--;
-        break;
+      case 0:  
+      if (enteredHours > 0) enteredHours--;
+      else enteredHours = 23;
+      break;
+    case 1:  
+      if (enteredMinutes > 0) enteredMinutes--;
+      else enteredMinutes = 59;
+      break;
+    case 2:  
+      if (enteredSeconds > 0) enteredSeconds--;
+      else enteredSeconds = 59;
+      break;
+    case 3:
+      if (selectedDogSize > 0) selectedDogSize--;
+      else selectedDogSize = 2;
+      break;
     }
   }
 
   if (digitalRead(buttonOKPin) == LOW) {
     updateState();
-  }
-}
-
-void incrementEnteredValue() {
-  switch (setParametersState) {
-    case 0:  
-      enteredHours++;
-      if (enteredHours > 23) enteredHours = 0;
-      break;
-    case 1:  
-      enteredMinutes++;
-      if (enteredMinutes > 59) enteredMinutes = 0;
-      break;
-    case 2:  
-      enteredSeconds++;
-      if (enteredSeconds > 59) enteredSeconds = 0;
-      break;
-    case 3:
-      selectedDogSize++;
-      if(selectedDogSize > 2) selectedDogSize = 0;
-  }
-}
-
-void decrementEnteredValue() {
-  switch (setParametersState) {
-    case 0:  
-      enteredHours--;
-      if (enteredHours < 0) enteredHours = 23;
-      break;
-    case 1:  
-      enteredMinutes--;
-      if (enteredMinutes < 0) enteredMinutes = 59;
-      break;
-    case 2:  
-      enteredSeconds--;
-      if (enteredSeconds < 0) enteredSeconds = 59;
-      break;
-    case 3:
-      selectedDogSize--;
-      if(selectedDogSize < 0) selectedDogSize = 2;
   }
 }
 
@@ -165,7 +139,7 @@ void printOnLCD() {
     lcd.setCursor(0, 1);
     switch (selectedDogSize) {
       case 0:
-        lcd.print(" Small dog");
+        lcd.print("Small dog");
         break;
       case 1:
         lcd.print("Medium dog");

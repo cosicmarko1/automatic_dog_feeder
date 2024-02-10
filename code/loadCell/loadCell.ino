@@ -1,28 +1,42 @@
 #include "HX711.h"
 
-HX711 scale(23, 19); 
+HX711 scaleFood(22, 21); 
+HX711 scaleWater(23, 19);
 
-// calibration factor for 1kg scale is -915
-float calibration_factor = -915;
-float units;
-float ounces;
+// calibration factor for 1kg scale for food is -900
+// calibration factor for 1kg scale for water is -1000
+float calibration_factor_scaleFood = -900;
+float calibration_factor_scaleWater = -1000;
+float unitsFood;
+float ouncesFood;
+float unitsWater;
+float ouncesWater;
 
 void setup() {
   Serial.begin(9600);
   Serial.println("HX711 weighing");
-  scale.set_scale(calibration_factor);
-  scale.tare();  // Reset the scale to 0
+  scaleFood.set_scale(calibration_factor_scaleFood);
+  scaleFood.tare();  // Reset the scale to 0
+  scaleWater.set_scale(calibration_factor_scaleWater);
+  scaleWater.tare();  // Reset the scale to 0
   Serial.println("Readings: ");
 }
 
 void loop() {
-  Serial.print("Reading: ");
-  units = scale.get_units(), 10;
-  if (units < 0) {
-    units = 0.00;
+  Serial.println("Reading: ");
+  unitsFood = scaleFood.get_units(), 10;
+  unitsWater = scaleWater.get_units(), 10;
+  if (unitsFood < 0) {
+    unitsFood = 0.00;
   }
-  ounces = units * 0.035274;
-  Serial.print(units);
-  Serial.println(" grams");
+  if (unitsWater < 0) {
+    unitsWater = 0.00;
+  }
+  ouncesFood = unitsFood * 0.035274;
+  ouncesWater = unitsWater * 0.035274;
+  Serial.print(unitsFood);
+  Serial.println(" grams of food");
+  Serial.print(unitsWater);
+  Serial.println(" mililiters of water");
   delay(1000);
 }
