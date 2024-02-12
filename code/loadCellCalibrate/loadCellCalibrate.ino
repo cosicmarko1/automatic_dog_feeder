@@ -1,6 +1,6 @@
 #include "HX711.h"
 
-HX711 scale(23, 19);
+HX711 scale(25, 26);
 
 // calibration factor for 1kg scale is -1170
 float calibration_factor = -900;
