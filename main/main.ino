@@ -46,12 +46,12 @@ int enteredSeconds = 0;
 int selectedDogSize = 0; // 0: Small Dog, 1: Medium Dog, 2: Big Dog
 
 // food amounts for dog sizes (in grams)
-int foodAmountSmallDog = 30;
-int foodAmountMediumDog = 60;
-int foodAmountBigDog = 90;
+int foodAmountSmallDog = 20;
+int foodAmountMediumDog = 40;
+int foodAmountBigDog = 60;
 
 // water amount for the bowl (bowl has capacity of 140ml)
-int waterMaxAmount = 130;
+int waterMaxAmount = 120;
 
 unsigned long startTime; 
 bool waterPouredAfterAnHour = false; 
@@ -128,7 +128,7 @@ void loop() {
   Serial.println(" ml of water"); 
   
   // dispensing food and cookies, and pouring water in morning
-  if(hour() == 7 && minute() == 0 && second() <= 59) {
+  if(hour() == 7 && minute() <= 2 && second() <= 59) {
     if(selectedDogSize == 0 && (weightFood < foodAmountSmallDog)) { // small dog
       dispenseFood();
       dispenseCookies();
@@ -147,7 +147,7 @@ void loop() {
   }
 
   // dispensing food and cookies, and pouring water in the evening
-  if(hour() == 19 && minute() == 0 && second() <= 59) {
+  if(hour() == 19 && minute() <= 2 && second() <= 59) {
     if(selectedDogSize == 0 && (weightFood < foodAmountSmallDog)) { // small dog
       dispenseFood();
       dispenseCookies();
@@ -175,6 +175,7 @@ void loop() {
   }
 
   // 3600000 miliseconds equals to 1 hour
+  // check every hour if there is enough water
   if (waterPouredAfterAnHour && millis() - startTime >= 3600000) {
     waterPouredAfterAnHour = false;
   }
@@ -188,9 +189,9 @@ void dispenseFood() {
   // each step makes 90 degrees rotation
   for(int x = 0; x < 50; x++){
     digitalWrite(stepperFoodStepPin, HIGH);                                     
-    delayMicroseconds(5000); 
+    delayMicroseconds(12000); 
     digitalWrite(stepperFoodStepPin, LOW);
-    delayMicroseconds(5000); 
+    delayMicroseconds(12000); 
   }
   delay(2000);
 
@@ -204,9 +205,9 @@ void dispenseCookies() {
 
   for(int x = 0; x < 50; x++){
     digitalWrite(stepperCookiesStepPin, HIGH);                                      
-    delayMicroseconds(5000); 
+    delayMicroseconds(12000); 
     digitalWrite(stepperCookiesStepPin, LOW);  
-    delayMicroseconds(5000); 
+    delayMicroseconds(12000); 
   }
   delay(2000);
 
@@ -216,9 +217,9 @@ void dispenseCookies() {
 
 void pourWater() {
   digitalWrite(waterPumpSwitch, HIGH); 
-  delay(500);             
+  delay(1000);             
   digitalWrite(waterPumpSwitch, LOW);  
-  delay(500);      
+  delay(1000);      
 }
 
 void handleButtons() {
